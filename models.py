@@ -18,7 +18,6 @@ class PipeLine(Base):
 
 
 class PipeLineStage(Base):
-
     __tablename__ = "pipeline_stage"
 
     id: Mapped[int] = mapped_column(primary_key=True)

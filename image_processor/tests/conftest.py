@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.engine.url import URL
 
 from config import settings
-from api_service.main import app
+from image_processor.main import app
 from models import Base
 from sources import db
 

@@ -2,7 +2,7 @@ from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
-    API_SERVICE: int = Field("8080", env="API_SERVICE")
+    IMAGE_PROCESSOR_PORT: int = Field("8080", env="IMAGE_PROCESSOR_PORT")
 
     POSTGRES_HOST: str = Field("localhost", env="POSTGRES_HOST")
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")

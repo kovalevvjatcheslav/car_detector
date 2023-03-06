@@ -6,7 +6,7 @@ def run_command(command: str):
 
 
 def up():
-    command = "docker-compose -f docker/docker_compose.yml up"
+    command = "docker-compose -f docker/docker_compose.yml up --remove-orphans"
     run_command(command)
 
 

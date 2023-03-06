@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 import uvicorn
 
-from router import router
+from config import settings
+from image_processor.router import router
 from sources import db
 
 
@@ -21,4 +22,4 @@ async def shutdown_event():
 app.include_router(router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=settings.IMAGE_PROCESSOR_PORT, log_level="info")
