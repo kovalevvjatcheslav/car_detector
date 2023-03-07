@@ -31,7 +31,7 @@ target_metadata = models.Base.metadata
 def get_url():
     return (
         f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:"
-        f"{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
+        f"{settings.POSTGRES_PORT}/{settings.POSTGRES_TEST_DB if settings.IS_TEST else settings.POSTGRES_DB}"
     )
 
 

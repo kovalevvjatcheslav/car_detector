@@ -1,20 +1,33 @@
+from base64 import b64encode
 import numpy as np
 import cv2
 
 
-def get_np_array(buffer: bytes) -> np.ndarray:
-    return np.frombuffer(buffer, np.uint8)
+class Pipeline:
+    @staticmethod
+    def to_np_array(buffer: bytes) -> np.ndarray:
+        return np.frombuffer(buffer, np.uint8)
 
+    @staticmethod
+    def decode_img(data: np.ndarray) -> np.ndarray:
+        return cv2.imdecode(data, cv2.IMREAD_UNCHANGED)
 
-def decode_img(data: np.ndarray) -> np.ndarray:
-    return cv2.imdecode(data, cv2.IMREAD_UNCHANGED)
+    @staticmethod
+    def resize_img(data: np.ndarray, width: int = 640, height: int = 640) -> np.ndarray:
+        return cv2.resize(data, (width, height))
 
+    @staticmethod
+    def normalize_img(
+        data: np.ndarray, alpha: int = 0, beta: int = 255, norm_type: int = cv2.NORM_MINMAX
+    ) -> np.ndarray:
+        return cv2.normalize(src=data, dst=None, alpha=alpha, beta=beta, norm_type=norm_type)
 
-def resize_img(data: np.ndarray, width: int = 640, height: int = 640) -> np.ndarray:
-    return cv2.resize(data, (width, height))
+    @staticmethod
+    def to_base64(data: np.ndarray) -> str:
+        return b64encode(data.tobytes()).decode()
 
-
-def normalize_img(
-    data: np.ndarray, alpha: int = 0, beta: int = 255, norm_type: int = cv2.NORM_MINMAX
-) -> np.ndarray:
-    return cv2.normalize(src=data, dst=None, alpha=alpha, beta=beta, norm_type=norm_type)
+    @classmethod
+    def run(cls, data: bytes, stages: {str: [any]}):
+        for meth_name, args in stages.items():
+            data = getattr(cls, meth_name)(data, *args)
+        return data

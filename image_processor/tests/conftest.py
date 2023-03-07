@@ -7,10 +7,19 @@ from sqlalchemy.engine.url import URL
 
 from config import settings
 from image_processor.main import app
-from models import Base
 from sources import db
 
-TEST_DB = "test_db"
+from alembic import command
+from alembic.config import Config
+
+
+settings.IS_TEST = True
+
+__config_path__ = "alembic.ini"
+__migration_path__ = "alembic"
+
+cfg = Config(__config_path__)
+cfg.set_main_option("script_location", __migration_path__)
 
 
 @pytest.fixture
@@ -28,20 +37,25 @@ async def setup():
 async def init_db():
     session_maker, dsn_dict = get_session_maker()
     async with session_maker.begin() as session:
-        await session.execute(text(f"DROP DATABASE IF EXISTS {TEST_DB}"))
-        await session.execute(text(f"CREATE DATABASE {TEST_DB}"))
-    dsn_dict["database"] = TEST_DB
+        await session.execute(text(f"DROP DATABASE IF EXISTS {settings.POSTGRES_TEST_DB}"))
+        await session.execute(text(f"CREATE DATABASE {settings.POSTGRES_TEST_DB}"))
+    dsn_dict["database"] = settings.POSTGRES_TEST_DB
     dsn = URL("postgresql+asyncpg", **dsn_dict)
     await db.setup(dsn)
     async with db.engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(execute_upgrade)
+
+
+def execute_upgrade(connection):
+    cfg.attributes["connection"] = connection
+    command.upgrade(cfg, "head")
 
 
 async def release_db():
     await db.release()
     session_maker, _ = get_session_maker()
     async with session_maker() as session:
-        await session.execute(text(f"DROP DATABASE IF EXISTS {TEST_DB}"))
+        await session.execute(text(f"DROP DATABASE IF EXISTS {settings.POSTGRES_TEST_DB}"))
 
 
 def get_session_maker():
