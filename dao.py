@@ -25,6 +25,21 @@ class PipeLineDAO:
                     result[pipeline_id] = PipeLineDTO(pipeline_id=pipeline_id, stages=[stage])
         return list(result.values())
 
+    @staticmethod
+    async def get_by_id(pipeline_id: int) -> t.Optional[PipeLineDTO]:
+        async with db.session_maker() as session:
+            stages = []
+            for meth_name, args in await session.execute(
+                select(Stage.meth_name, Stage.args)
+                .join(PipeLineStage)
+                .order_by(PipeLineStage.order)
+                .where(PipeLineStage.pipeline_id == pipeline_id)
+            ):
+                stages.append(StageDTO(meth_name=meth_name, args=args if args else []))
+        if not stages:
+            return
+        return PipeLineDTO(pipeline_id=pipeline_id, stages=stages)
+
 
 class SampleDAO:
     @staticmethod
@@ -34,4 +49,4 @@ class SampleDAO:
                 pipeline_id=pipeline_id, in_data=data, **sample_dto.dict(exclude_none=True)
             )
             session.add(sample)
-            session.commit()
+            await session.commit()

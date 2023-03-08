@@ -4,6 +4,7 @@ from pydantic import BaseSettings, Field
 class Settings(BaseSettings):
     IMAGE_PROCESSOR_PORT: int = Field(8080, env="IMAGE_PROCESSOR_PORT")
 
+    DETECTOR_HOST: str = Field("detector", env="DETECTOR_HOST")
     DETECTOR_PORT: int = Field(8081, env="DETECTOR_PORT")
 
     POSTGRES_HOST: str = Field("localhost", env="POSTGRES_HOST")

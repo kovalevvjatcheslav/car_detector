@@ -42,6 +42,7 @@ async def init_db():
     dsn_dict["database"] = settings.POSTGRES_TEST_DB
     dsn = URL("postgresql+asyncpg", **dsn_dict)
     await db.setup(dsn)
+    db.engine.echo = True
     async with db.engine.begin() as conn:
         await conn.run_sync(execute_upgrade)
 

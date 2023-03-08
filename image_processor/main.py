@@ -22,4 +22,6 @@ async def shutdown_event():
 app.include_router(router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=settings.IMAGE_PROCESSOR_PORT, log_level="info")
+    uvicorn.run(
+        app, host="0.0.0.0", port=settings.IMAGE_PROCESSOR_PORT, log_level=settings.LOG_LEVEL
+    )
