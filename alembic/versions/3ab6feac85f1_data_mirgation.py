@@ -40,6 +40,7 @@ def upgrade() -> None:
             order += 1
 
         session.add_all(pipeline_stages)
+        session.commit()
 
 
 def downgrade() -> None:
@@ -51,3 +52,4 @@ def downgrade() -> None:
         )
         session.execute(delete(Stage).where(Stage.meth_name.in_(METHODS)))
         session.execute(delete(PipeLine).where(PipeLine.id.in_(pipeline_ids)))
+        session.commit()
