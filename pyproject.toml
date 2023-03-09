@@ -35,3 +35,6 @@ exclude = ".database"
 [tool.poetry.scripts]
 up = "poetry_scripts.utils:up"
 down = "poetry_scripts.utils:down"
+build_images = "poetry_scripts.utils:build_images"
+migrate = "poetry_scripts.utils:migrate"
+tests = "poetry_scripts.utils:tests"

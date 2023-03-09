@@ -22,4 +22,10 @@ async def shutdown_event():
 app.include_router(router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=settings.DETECTOR_PORT, log_level=settings.LOG_LEVEL)
+    uvicorn.run(
+        "detector.main:app",
+        host="0.0.0.0",
+        port=settings.DETECTOR_PORT,
+        log_level=settings.LOG_LEVEL,
+        workers=settings.DETECTOR_WORKERS,
+    )

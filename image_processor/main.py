@@ -23,5 +23,9 @@ app.include_router(router)
 
 if __name__ == "__main__":
     uvicorn.run(
-        app, host="0.0.0.0", port=settings.IMAGE_PROCESSOR_PORT, log_level=settings.LOG_LEVEL
+        "image_processor.main:app",
+        host="0.0.0.0",
+        port=settings.IMAGE_PROCESSOR_PORT,
+        log_level=settings.LOG_LEVEL,
+        workers=settings.IMAGE_PROCESSOR_WORKERS,
     )

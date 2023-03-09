@@ -1,0 +1,4 @@
+*/.idea
+.database
+__pychache__
+*/tests
